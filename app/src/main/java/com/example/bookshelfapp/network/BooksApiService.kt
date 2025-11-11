@@ -3,10 +3,9 @@ package com.example.bookshelfapp.network
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
-
-///https://www.googleapis.com/books/v1/volumes?q=jazz+history
 
 private const val BASE_URL =
     "https://www.googleapis.com/"
@@ -18,8 +17,16 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface BookApiService {
+    ///search results for the term "jazz history"
+    ///URL: https://www.googleapis.com/books/v1/volumes?q=jazz+history
     @GET("books/v1/volumes")
-    suspend fun getBookIds(@Query("q") searchQuery: String = "jazz history"): BookResponse
+    suspend fun getBookIds(@Query("q") searchQuery: String = "jazz history"): SearchBooksResponse
+
+    ///request to get info on a specific book
+    ///URL: https://www.googleapis.com/books/v1/volumes/<volume_id>
+    @GET("books/v1/volumes/{volumeId}")
+    suspend fun getBookInfo(@Path("volumeId") volumeId: String ): SpecificBookResponse
+
 }
 
 object BookApi{

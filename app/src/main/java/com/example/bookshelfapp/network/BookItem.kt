@@ -1,5 +1,5 @@
 package com.example.bookshelfapp.network
 
-data class Book(
+data class BookItem(
     val id: String
 )

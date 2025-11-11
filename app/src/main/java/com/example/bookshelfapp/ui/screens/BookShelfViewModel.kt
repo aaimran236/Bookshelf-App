@@ -5,7 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bookshelfapp.network.BookApi
+import com.example.bookshelfapp.data.BookThumbnailRepository
+import com.example.bookshelfapp.data.NetworkBookThumbnailRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -26,14 +27,21 @@ class BookShelfViewModel : ViewModel() {
         getBookIds()
     }
 
-   fun getBookIds(){
-       viewModelScope.launch {
-           bookUiState=try {
-               val bookResponse= BookApi.retrofitService.getBookIds()
-               BookUiState.Success("Success: ${bookResponse.items.size} Book ids retrieved")
-           }catch (e: IOException){
-               BookUiState.Error
-           }
-       }
+    fun getBookIds() {
+        viewModelScope.launch {
+            bookUiState = try {
+//               val bookResponse= BookApi.retrofitService.getBookIds()
+//               BookUiState.Success("Success: ${bookResponse.items.size} Book ids retrieved")
+//           }catch (e: IOException){
+//               BookUiState.Error
+//           }
+                val bookThumbnailRepository: BookThumbnailRepository= NetworkBookThumbnailRepository()
+
+                val thumbnails = bookThumbnailRepository.getBookThumbnails()
+                BookUiState.Success("Success: ${thumbnails.size} Book ids retrieved")
+            } catch (e: IOException) {
+                BookUiState.Error
+            }
+        }
     }
 }
