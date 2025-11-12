@@ -6,26 +6,22 @@ interface BookThumbnailRepository {
     suspend fun getBookThumbnails(): List<String>
 }
 
-class NetworkBookThumbnailRepository : BookThumbnailRepository{
+class NetworkBookThumbnailRepository : BookThumbnailRepository {
 
     override suspend fun getBookThumbnails(): List<String> {
-        val bookApiResponse= BookApi.retrofitService.getBookIds()
-        val bookIds=bookApiResponse.items.map {
-            it.id
-        }
+        val searchBookApiResponse = BookApi.retrofitService.getBookIds()
 
-        val thumbnailUrls: MutableList<String> =mutableListOf()
+        val thumbnailUrls: MutableList<String> = mutableListOf()
 
-        bookIds.forEach {
-            id->
+        searchBookApiResponse.items.forEach {
             try {
-                val bookInfo= BookApi.retrofitService.getBookInfo(id)
-
+                val bookInfo = BookApi.retrofitService.getBookInfo(it.id)
                 bookInfo.volumeInfo?.imageLinks?.thumbnail?.let {
-                    val imageUrl=it.replace("http://", "https://")
+                    stringUrl->
+                    val imageUrl = stringUrl.replace("http://", "https://")
                     thumbnailUrls.add(imageUrl)
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
 
             }
         }

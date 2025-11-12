@@ -12,7 +12,7 @@ import java.io.IOException
 
 
 sealed interface BookUiState {
-    data class Success(val ids: String) : BookUiState
+    data class Success(val thumbnailList:List<String>) : BookUiState
     object Error : BookUiState
     object Loading : BookUiState
 }
@@ -38,7 +38,7 @@ class BookShelfViewModel : ViewModel() {
                 val bookThumbnailRepository: BookThumbnailRepository= NetworkBookThumbnailRepository()
 
                 val thumbnails = bookThumbnailRepository.getBookThumbnails()
-                BookUiState.Success("Success: ${thumbnails.size} Book ids retrieved")
+                BookUiState.Success(thumbnailList = thumbnails)
             } catch (e: IOException) {
                 BookUiState.Error
             }
