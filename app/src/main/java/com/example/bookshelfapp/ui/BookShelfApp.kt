@@ -30,7 +30,10 @@ fun BookShelfApp() {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            val bookViewModel: BookShelfViewModel = viewModel()
+            val bookViewModel: BookShelfViewModel = viewModel(
+                factory = BookShelfViewModel.Factory
+            )
+
             HomeScreen(
                 bookUiState = bookViewModel.bookUiState,
                 contentPadding = it,

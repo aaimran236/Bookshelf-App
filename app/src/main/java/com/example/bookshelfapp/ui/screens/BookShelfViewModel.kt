@@ -4,20 +4,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.bookshelfapp.BookSelfApplication
 import com.example.bookshelfapp.data.BookThumbnailRepository
-import com.example.bookshelfapp.data.NetworkBookThumbnailRepository
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.io.IOException
 
 
 sealed interface BookUiState {
-    data class Success(val thumbnailList:List<String>) : BookUiState
+    data class Success(val thumbnailList: List<String>) : BookUiState
     object Error : BookUiState
     object Loading : BookUiState
 }
 
-class BookShelfViewModel : ViewModel() {
+class BookShelfViewModel(
+    private val thumbnailRepository: BookThumbnailRepository
+) : ViewModel() {
 
     var bookUiState: BookUiState by mutableStateOf(BookUiState.Loading)
         private set
@@ -30,17 +37,25 @@ class BookShelfViewModel : ViewModel() {
     fun getBookIds() {
         viewModelScope.launch {
             bookUiState = try {
-//               val bookResponse= BookApi.retrofitService.getBookIds()
-//               BookUiState.Success("Success: ${bookResponse.items.size} Book ids retrieved")
-//           }catch (e: IOException){
-//               BookUiState.Error
-//           }
-                val bookThumbnailRepository: BookThumbnailRepository= NetworkBookThumbnailRepository()
+//
+                ///val bookThumbnailRepository: BookThumbnailRepository= NetworkBookThumbnailRepository()
 
-                val thumbnails = bookThumbnailRepository.getBookThumbnails()
-                BookUiState.Success(thumbnailList = thumbnails)
+
+                BookUiState.Success(thumbnailRepository.getBookThumbnails())
             } catch (e: IOException) {
                 BookUiState.Error
+            } catch (e: HttpException) {
+                BookUiState.Error
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as BookSelfApplication)
+                val bookThumbnailRepository = application.container.bookThumbnailRepository
+                BookShelfViewModel(thumbnailRepository = bookThumbnailRepository)
             }
         }
     }
