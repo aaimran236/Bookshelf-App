@@ -13,6 +13,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,6 +37,7 @@ fun BookShelfApp() {
 
             HomeScreen(
                 bookUiState = bookViewModel.bookUiState,
+                retryAction = bookViewModel::getBookThumbnails,
                 contentPadding = it,
             )
         }
@@ -53,6 +55,12 @@ fun BookShelfTopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifi
                 style = MaterialTheme.typography.headlineSmall,
             )
         },
+        colors = TopAppBarDefaults.topAppBarColors(
+            // Set the background color of the TopAppBar
+            containerColor = Color(0xFF9C4527),
+            // Set the color of the title text
+            titleContentColor = Color.White
+        ),
         modifier = modifier
     )
 }

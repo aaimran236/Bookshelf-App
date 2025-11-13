@@ -9,14 +9,16 @@ interface AppContainer {
 }
 
 class DefaultAppContainer: AppContainer{
-    private val BASE_URL =
+    private val baseUrl =
         "https://www.googleapis.com/"
 
     private val retrofit = Retrofit.Builder()
         ///.addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl(BASE_URL)
+        .baseUrl(baseUrl)
         .build()
+    ///`by lazy` ensures that the code inside the {} block is executed only once,
+    // the very first time this property is accessed. the result is stored and reused.
     private val retrofitService: BookApiService by lazy {
         retrofit.create(BookApiService::class.java)
     }

@@ -30,11 +30,13 @@ class BookShelfViewModel(
         private set
 
 
+    // The init block runs automatically every time an object of this class is created.
+    // It's used for setup logic, like starting an initial data fetch.
     init {
-        getBookIds()
+        getBookThumbnails()
     }
 
-    fun getBookIds() {
+    fun getBookThumbnails() {
         viewModelScope.launch {
             bookUiState = try {
 //
