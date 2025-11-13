@@ -16,7 +16,8 @@ The app searches for books using the Google Books API and displays their cover t
 ## 🎥 Video Demo
 
 A short video demonstrating the app's features, including the loading state and the final thumbnail grid.
-https://github.com/user-attachments/assets/ee413ecf-3fca-4482-91ed-0dc118d5f666
+<video src="https://github.com/user-attachments/assets/ee413ecf-3fca-4482-91ed-0dc118d5f666" controls loop width="100%">
+</video>
 
 
 ## ✨ Features
