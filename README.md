@@ -59,8 +59,12 @@ This project was an opportunity to learn and implement a variety of core Android
 
 ## 🚀 How to Build and Run
 
-1.  **Clone the repository:**
-    
+1.  **Clone the repository**
+    Use the command below to clone the project to your local machine.
+    ```bash
+    git clone https://github.com/aaimran236/Bookshelf-App.git
+    cd Bookshelf-App
+    ```
 
 2.  **Open in Android Studio:**
     - Open Android Studio (Hedgehog or newer is recommended).
