@@ -18,7 +18,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bookshelfapp.R
-import com.example.bookshelfapp.ui.theme.screens.BookShelfViewModel
+import com.example.bookshelfapp.ui.screens.BookShelfViewModel
 import com.example.bookshelfapp.ui.theme.screens.HomeScreen
 
 @Composable
@@ -37,7 +37,10 @@ fun BookShelfApp() {
 
             HomeScreen(
                 bookUiState = bookViewModel.bookUiState,
-                retryAction = bookViewModel::getBookThumbnails,
+                retryAction =bookViewModel::getBookThumbnails,
+                searchQuery = bookViewModel.searchQuery,
+                onSearchQueryChange = bookViewModel::updateSearchQuery,
+                onSearch = bookViewModel::getBookThumbnails,
                 contentPadding = it,
             )
         }

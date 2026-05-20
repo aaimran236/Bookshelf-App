@@ -1,4 +1,4 @@
-package com.example.bookshelfapp.ui.theme.screens
+package com.example.bookshelfapp.ui.screens
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,21 +29,27 @@ class BookShelfViewModel(
     var bookUiState: BookUiState by mutableStateOf(BookUiState.Loading)
         private set
 
+    var searchQuery: String by mutableStateOf("jazz history")
+        private set
+
 
     // The init block runs automatically every time an object of this class is created.
     // It's used for setup logic, like starting an initial data fetch.
+
     init {
         getBookThumbnails()
     }
 
+    fun updateSearchQuery(query: String) {
+        searchQuery = query
+    }
+
     fun getBookThumbnails() {
         viewModelScope.launch {
+            bookUiState = BookUiState.Loading
             bookUiState = try {
-//
                 ///val bookThumbnailRepository: BookThumbnailRepository= NetworkBookThumbnailRepository()
-
-
-                BookUiState.Success(thumbnailRepository.getBookThumbnails())
+                BookUiState.Success(thumbnailRepository.getBookThumbnails(searchQuery))
             } catch (e: IOException) {
                 BookUiState.Error
             } catch (e: HttpException) {

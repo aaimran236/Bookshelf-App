@@ -5,22 +5,28 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-//private const val BASE_URL =
-//    "https://www.googleapis.com/"
-//
-//private val retrofit = Retrofit.Builder()
-//    ///.addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-//    .addConverterFactory(GsonConverterFactory.create())
-//    .baseUrl(BASE_URL)
-//    .build()
+/*private const val BASE_URL =
+    "https://www.googleapis.com/"
+
+private val retrofit = Retrofit.Builder()
+    ///.addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+    .addConverterFactory(GsonConverterFactory.create())
+    .baseUrl(BASE_URL)
+    .build()*/
 
 interface BookApiService {
     ///search results for the term "jazz history"
     ///URL: https://www.googleapis.com/books/v1/volumes?q=jazz+history
 
+    /*@GET("books/v1/volumes")
+    suspend fun getBookIds(
+        @Query("q") searchQuery: String = "jazz history",
+        @Query("maxResults") maxResults: Int=20
+    ): SearchBooksResponse  */
+
     @GET("books/v1/volumes")
     suspend fun getBookIds(
-        @Query("q") searchQuery: String = "jazz history"
+        @Query("q") searchQuery: String
     ): SearchBooksResponse
 
     ///request to get info on a specific book

@@ -5,4 +5,7 @@
     <string name="loading_failed">Failed to load</string>
     <string name="thumbnail">Thumbnail</string>
     <string name="retry">Retry</string>
+    <string name="search_placeholder">Search books…</string>
+    <string name="search">Search</string>
+    <string name="no_results">No books found for your search</string>
 </resources>
