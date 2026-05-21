@@ -1,4 +1,5 @@
-package com.example.bookshelfapp.ui.theme.screens
+@file:OptIn(ExperimentalMaterial3Api::class)
+package com.example.bookshelfapp.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -21,52 +22,72 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.bookshelfapp.AppViewModelProvider
 import com.example.bookshelfapp.R
-import com.example.bookshelfapp.ui.screens.BookUiState
+import com.example.bookshelfapp.network.BookGridItem
+import com.example.bookshelfapp.ui.BookShelfTopAppBar
+import com.example.bookshelfapp.ui.navigation.NavigationDestination
+
+object HomeDestination : NavigationDestination{
+    override val route= "Home"
+}
 
 @Composable
 fun HomeScreen(
-    bookUiState: BookUiState,
-    retryAction: () -> Unit,
-    searchQuery: String,
-    onSearchQueryChange: (String) -> Unit,
-    onSearch: () -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    navigateToBookDetails: (String)-> Unit,
+    viewModel: BookShelfViewModel= viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    Column(modifier = modifier.padding(contentPadding)) {
-        BookSearchBar(
-            query = searchQuery,
-            onQueryChange = onSearchQueryChange,
-            onSearch = onSearch,
-            modifier = Modifier.fillMaxWidth()
-        )
-        when (bookUiState) {
-            is BookUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-            is BookUiState.Success -> ThumbnailGridScreen(
-                thumbnails = bookUiState.thumbnailList,
-                modifier = modifier.fillMaxSize(),
-                ///contentPadding = contentPadding
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = { BookShelfTopAppBar(
+            scrollBehavior = scrollBehavior,
+            canNavigateBack = false
+        ) }
+    ) {
+        contentPadding->
+        Column(modifier = modifier.padding(contentPadding)) {
+            BookSearchBar(
+                query = viewModel.searchQuery,
+                onQueryChange = viewModel::updateSearchQuery,
+                onSearch = viewModel::getBookThumbnails,
+                modifier = Modifier.fillMaxWidth()
             )
 
-            is BookUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
+            when (val bookUiState=viewModel.bookUiState) {
+                is BookUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+                is BookUiState.Success -> BooksGrid(
+                    books = bookUiState.books,
+                    onBookClick = navigateToBookDetails,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                is BookUiState.Error -> ErrorScreen(viewModel::getBookThumbnails, modifier = modifier.fillMaxSize())
+            }
         }
     }
 }
@@ -110,6 +131,74 @@ fun BookSearchBar(
         ),
         shape = RoundedCornerShape(50.dp)
     )
+}
+
+@Composable
+private fun BooksGrid(
+    books: List<BookGridItem>,
+    onBookClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (books.isEmpty()) {
+        Box(modifier = modifier, contentAlignment = Alignment.Center) {
+            Text(
+                text = stringResource(R.string.no_results),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+    } else {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = modifier.padding(horizontal = 8.dp),
+            contentPadding = PaddingValues(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(items = books, key = { it.id }) { book ->
+                BookCard(
+                    book = book,
+                    onClick = { onBookClick(book.id) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BookCard(
+    book: BookGridItem,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(book.thumbnailUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = book.title,
+                contentScale = ContentScale.Crop,
+                error = painterResource(R.drawable.ic_broken_image),
+                placeholder = painterResource(R.drawable.loading_img),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(0.75f)
+            )
+            Text(
+                text = book.title,
+                style = MaterialTheme.typography.labelMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)
+            )
+        }
+    }
 }
 
 @Composable

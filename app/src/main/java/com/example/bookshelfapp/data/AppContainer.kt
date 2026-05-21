@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 interface AppContainer {
-    val bookThumbnailRepository: BookThumbnailRepository
+    val bookRepository: BookRepository
 }
 
 class DefaultAppContainer : AppContainer {
@@ -33,7 +33,7 @@ class DefaultAppContainer : AppContainer {
 
     ///`by lazy` ensures that the code inside the {} block is executed only once,
     /// the very first time this property is accessed. the result is stored and reused.
-    override val bookThumbnailRepository: BookThumbnailRepository by lazy {
-        NetworkBookThumbnailRepository(retrofitService)
+    override val bookRepository: BookRepository by lazy {
+        NetworkBookRepository(retrofitService)
     }
 }

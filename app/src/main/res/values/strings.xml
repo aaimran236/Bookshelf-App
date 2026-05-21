@@ -8,4 +8,17 @@
     <string name="search_placeholder">Search books…</string>
     <string name="search">Search</string>
     <string name="no_results">No books found for your search</string>
+    <string name="back_button">Back</string>
+
+    <string name="book_details">Book Details</string>
+    <string name="back">Back</string>
+    <string name="unknown_title">Unknown Title</string>
+    <string name="publisher">Publisher</string>
+    <string name="published_date">Published</string>
+    <string name="page_count">Pages</string>
+    <string name="rating">Rating</string>
+    <string name="language">Language</string>
+    <string name="ratings">ratings</string>
+    <string name="categories">Categories</string>
+    <string name="description">Description</string>
 </resources>

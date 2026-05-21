@@ -2,54 +2,38 @@
 
 package com.example.bookshelfapp.ui
 
-import androidx.compose.foundation.layout.fillMaxSize
+
+import androidx.compose.material.icons.Icons.Filled
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.bookshelfapp.R
-import com.example.bookshelfapp.ui.screens.BookShelfViewModel
-import com.example.bookshelfapp.ui.theme.screens.HomeScreen
+import com.example.bookshelfapp.ui.navigation.BookShelfNavHost
 
 @Composable
-fun BookShelfApp() {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    Scaffold(
-    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-    topBar = { BookShelfTopAppBar(scrollBehavior = scrollBehavior) }
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            val bookViewModel: BookShelfViewModel = viewModel(
-                factory = BookShelfViewModel.Factory
-            )
-
-            HomeScreen(
-                bookUiState = bookViewModel.bookUiState,
-                retryAction =bookViewModel::getBookThumbnails,
-                searchQuery = bookViewModel.searchQuery,
-                onSearchQueryChange = bookViewModel::updateSearchQuery,
-                onSearch = bookViewModel::getBookThumbnails,
-                contentPadding = it,
-            )
-        }
-    }
+fun BookShelfApp(navController: NavHostController = rememberNavController()) {
+    BookShelfNavHost(navController = navController)
 }
 
-
 @Composable
-fun BookShelfTopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifier = Modifier) {
+fun BookShelfTopAppBar(
+    modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit = {},
+) {
     CenterAlignedTopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
@@ -61,9 +45,21 @@ fun BookShelfTopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifi
         colors = TopAppBarDefaults.topAppBarColors(
             // Set the background color of the TopAppBar
             containerColor = Color(0xFF9C4527),
+            scrolledContainerColor = Color(0xFF9C4527),
             // Set the color of the title text
-            titleContentColor = Color.White
+            titleContentColor = Color.White,
+            navigationIconContentColor = Color.White
         ),
-        modifier = modifier
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back_button)
+                    )
+                }
+            }
+        }
     )
 }
