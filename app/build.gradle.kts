@@ -101,4 +101,11 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+
+    val paging_version = "3.4.2"
+
+    implementation("androidx.paging:paging-common:$paging_version")
+
+    // Jetpack Compose integration
+    implementation("androidx.paging:paging-compose:$paging_version")
 }

@@ -65,6 +65,7 @@ fun HomeScreen(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { BookShelfTopAppBar(
+            title = stringResource(R.string.app_name),
             scrollBehavior = scrollBehavior,
             canNavigateBack = false
         ) }

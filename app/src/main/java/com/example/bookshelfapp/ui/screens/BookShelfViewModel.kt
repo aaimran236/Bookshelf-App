@@ -45,7 +45,7 @@ class BookShelfViewModel(
             bookUiState = BookUiState.Loading
             bookUiState = try {
                 ///val bookThumbnailRepository: BookThumbnailRepository= NetworkBookThumbnailRepository()
-                BookUiState.Success(bookRepository.getBooks(searchQuery))
+                BookUiState.Success(bookRepository.getBooks(query=searchQuery, maxResults = 20))
             } catch (e: IOException) {
                 BookUiState.Error
             } catch (e: HttpException) {

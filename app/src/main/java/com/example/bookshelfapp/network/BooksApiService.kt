@@ -26,7 +26,8 @@ interface BookApiService {
 
     @GET("books/v1/volumes")
     suspend fun getBookIds(
-        @Query("q") searchQuery: String
+        @Query("q") searchQuery: String,
+        @Query("maxResults") maxResults: Int=20
     ): SearchBooksResponse
 
     ///request to get info on a specific book

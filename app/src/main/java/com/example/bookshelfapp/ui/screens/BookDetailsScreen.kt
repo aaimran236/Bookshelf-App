@@ -54,6 +54,7 @@ fun BookDetailsScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { BookShelfTopAppBar(
             scrollBehavior = scrollBehavior,
+            title = stringResource(R.string.book_details),
             canNavigateBack = true,
             navigateUp = navigateBack
         ) }

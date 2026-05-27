@@ -6,23 +6,23 @@ import com.example.bookshelfapp.network.BookGridItem
 import com.example.bookshelfapp.network.SpecificBookResponse
 
 interface BookRepository {
-    suspend fun getBooks(query: String): List<BookGridItem>
+    suspend fun getBooks(query: String,maxResults: Int): List<BookGridItem>
     suspend fun getBookDetails(bookId: String): SpecificBookResponse
 }
 
 class NetworkBookRepository(
     private val bookApiService: BookApiService
 ) : BookRepository {
-    override suspend fun getBooks(query: String): List<BookGridItem> {
-        val searchResponse = bookApiService.getBookIds(searchQuery = query)
+    override suspend fun getBooks(query: String,maxResults: Int): List<BookGridItem> {
+        val searchResponse = bookApiService.getBookIds(searchQuery = query, maxResults = maxResults)
         val books: MutableList<BookGridItem> = mutableListOf()
 
         searchResponse.items.orEmpty().forEach { item ->
             try {
-                val bookInfo = bookApiService.getBookInfo(item.id)
-                val thumbnail = bookInfo.volumeInfo?.imageLinks?.thumbnail
+                ///val bookInfo = bookApiService.getBookInfo(item.id)
+                val thumbnail = item.volumeInfo?.imageLinks?.thumbnail
                     ?.replace("http://", "https://") ?: return@forEach
-                val title = bookInfo.volumeInfo.title ?: return@forEach
+                val title = item.volumeInfo.title ?: return@forEach
                 books.add(
                     BookGridItem(
                         id = item.id,

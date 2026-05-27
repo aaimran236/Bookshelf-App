@@ -30,6 +30,7 @@ fun BookShelfApp(navController: NavHostController = rememberNavController()) {
 @Composable
 fun BookShelfTopAppBar(
     modifier: Modifier = Modifier,
+    title: String,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit = {},
@@ -38,7 +39,7 @@ fun BookShelfTopAppBar(
         scrollBehavior = scrollBehavior,
         title = {
             Text(
-                text = stringResource(R.string.app_name),
+                text = title,
                 style = MaterialTheme.typography.headlineSmall,
             )
         },
