@@ -36,6 +36,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookshelfapp.R
 import com.example.bookshelfapp.network.VolumeInfo
+import com.example.bookshelfapp.ui.screens.home.ErrorScreen
+import com.example.bookshelfapp.ui.screens.home.LoadingScreen
 
 object BookDetailsDestination: NavigationDestination{
     override val route="book_details"
@@ -66,7 +68,7 @@ fun BookDetailsScreen(
                     .padding(paddingValues)
             )
             is BookDetailsUiState.Error -> ErrorScreen(
-                retryAction = viewModel::getBookDetails,
+                onRetry = viewModel::getBookDetails,
                 modifier = modifier
                     .fillMaxSize()
                     .padding(paddingValues)

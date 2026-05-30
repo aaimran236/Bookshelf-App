@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.bookshelfapp.ui.screens.BookDetailsDestination
 import com.example.bookshelfapp.ui.screens.BookDetailsScreen
-import com.example.bookshelfapp.ui.screens.HomeDestination
-import com.example.bookshelfapp.ui.screens.HomeScreen
+import com.example.bookshelfapp.ui.screens.home.HomeDestination
+import com.example.bookshelfapp.ui.screens.home.HomeScreen
 
 @Composable
 fun BookShelfNavHost(

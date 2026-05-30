@@ -15,31 +15,34 @@ private val retrofit = Retrofit.Builder()
     .build()*/
 
 interface BookApiService {
-    ///search results for the term "jazz history"
-    ///URL: https://www.googleapis.com/books/v1/volumes?q=jazz+history
 
-    /*@GET("books/v1/volumes")
-    suspend fun getBookIds(
-        @Query("q") searchQuery: String = "jazz history",
-        @Query("maxResults") maxResults: Int=20
-    ): SearchBooksResponse  */
+    /**
+     * Searches for books matching [searchQuery].
+     * [startIndex] and [maxResults] control which page of results to return.
+     *
+     * https://www.googleapis.com/books/v1/volumes?q=jazz+history&key=myapikey for searchQuery= jazz history
+     */
 
     @GET("books/v1/volumes")
-    suspend fun getBookIds(
+    suspend fun searchBooks(
         @Query("q") searchQuery: String,
-        @Query("maxResults") maxResults: Int=20
+        @Query("startIndex") startIndex: Int,
+        @Query("maxResults") maxResults: Int,
     ): SearchBooksResponse
 
-    ///request to get info on a specific book
-    ///URL: https://www.googleapis.com/books/v1/volumes/<volume_id>
 
+    /**
+     * Fetches the full details for a single book identified by [volumeId].
+     * URL: https://www.googleapis.com/books/v1/volumes/<volume_id>
+     */
     @GET("books/v1/volumes/{volumeId}")
-    suspend fun getBookInfo(@Path("volumeId") volumeId: String): SpecificBookResponse
-
+    suspend fun getBookDetails(
+        @Path("volumeId") volumeId: String,
+    ): SpecificBookResponse
 }
 
-//object BookApi {
-//    val retrofitService: BookApiService by lazy {
-//        retrofit.create(BookApiService::class.java)
-//    }
-//}
+/*object BookApi {
+    val retrofitService: BookApiService by lazy {
+        retrofit.create(BookApiService::class.java)
+    }
+}*/

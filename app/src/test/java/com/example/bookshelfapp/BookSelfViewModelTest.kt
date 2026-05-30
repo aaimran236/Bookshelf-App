@@ -2,7 +2,7 @@ package com.example.bookshelfapp
 
 
 import com.example.bookshelfapp.rule.TestDispatcherRule
-import com.example.bookshelfapp.ui.screens.BookShelfViewModel
+import com.example.bookshelfapp.ui.screens.home.BookShelfViewModel
 import com.example.bookshelfapp.ui.screens.BookUiState
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
