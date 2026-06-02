@@ -39,6 +39,21 @@ class BookPagingSource(
         /** The offset of the very first page. Google Books API is 0-based. */
         private const val STARTING_INDEX = 0
     }
+    /**
+     * Tracks every book ID this PagingSource has already returned.
+     *
+     * The Google Books API does not guarantee unique items across pages —
+     * the same volume can appear at startIndex=0 AND startIndex=20.
+     * This set is the single fix for that: Set.add() returns true when the
+     * element is new, and false when it already exists, so using it inside
+     * filter{} below keeps only first-seen books and silently drops repeats.
+     *
+     * This works correctly because the Paging library creates one fresh
+     * PagingSource instance per query (via pagingSourceFactory in the
+     * repository), so returnedIds always starts empty for each new search
+     * and accumulates across all pages of that query only.
+     */
+    private val returnedIds = mutableSetOf<String>()
 
     /**
      * The Paging library calls this automatically whenever it decides more data
@@ -68,6 +83,10 @@ class BookPagingSource(
             val books = response.items
                 .orEmpty()
                 .mapNotNull { it.toBookGridItemOrNull() }
+                // filter runs AFTER mapNotNull, so it only sees valid BookGridItems.
+                // returnedIds.add(id) returns true  → ID is new     → keep this book
+                //                     returns false → ID seen before → drop this book
+                .filter { book-> returnedIds.add(book.id)}
 
             LoadResult.Page(
                 data = books,

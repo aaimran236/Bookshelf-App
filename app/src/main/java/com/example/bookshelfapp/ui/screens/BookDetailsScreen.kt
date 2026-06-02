@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookshelfapp.R
@@ -165,7 +166,7 @@ private fun BookDetailsContent(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = desc,
+                text = desc.toPlainText(),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Justify
             )
@@ -196,3 +197,19 @@ private fun BookDetailRow(
         )
     }
 }
+
+/**
+ * Strips HTML tags from a string returned by the Google Books API.
+ *
+ * HtmlCompat.fromHtml() parses the HTML and returns a Spanned object.
+ * Calling .toString() converts it to plain text — tags are removed and
+ * block elements like <p> and <li> are converted to newline characters.
+ * .trim() removes any leading or trailing whitespace left behind.
+ *
+ * FROM_HTML_MODE_COMPACT treats block-level elements (p, li, h1…)
+ * as single newline separators, which reads cleanly in a Text composable.
+ */
+private fun String.toPlainText(): String =
+    HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        .toString()
+        .trim()
